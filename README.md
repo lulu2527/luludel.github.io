@@ -560,5 +560,3 @@
 </script>
 </body>
 </html>
-time-elapsed.html
-Affichage de time-elapsed.html en cours...
