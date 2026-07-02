@@ -377,31 +377,8 @@
 
   <div class="content">
 
-    <!-- Picker -->
-    <div class="picker-card">
-      <div class="picker-label">Depuis quand ?</div>
-      <div class="picker-row">
-        <div class="picker-field">
-          <label>Date</label>
-          <input type="date" id="dateInput">
-        </div>
-        <div class="picker-field">
-          <label>Heure</label>
-          <input type="time" id="timeInput" value="00:00">
-        </div>
-      </div>
-    </div>
-
-    <button class="btn-start" id="btnStart" onclick="startCounter()">Calculer le temps écoulé</button>
-
-    <!-- Placeholder (état initial) -->
-    <div class="placeholder" id="placeholder">
-      <div class="placeholder-icon">⏳</div>
-      <div class="placeholder-text">Sélectionne une date et une heure, puis lance le calcul.</div>
-    </div>
-
-    <!-- Counter (masqué au départ) -->
-    <div class="counter-section hidden" id="counterSection">
+    <!-- Counter -->
+    <div class="counter-section" id="counterSection">
 
       <div class="since-label">Depuis le</div>
       <div class="since-date" id="sinceDate">—</div>
@@ -443,55 +420,17 @@
         <span class="total-value" id="val-total">0</span>
       </div>
 
-      <button class="btn-reset" onclick="resetCounter()">↩ Choisir une autre date</button>
     </div>
 
   </div>
 </div>
 
 <script>
-  let intervalId = null;
-  let targetDate = null;
   let prevValues = {};
+  const targetDate = new Date('2026-06-11T06:14:00');
 
-  // Initialise la date à aujourd'hui
-  const today = new Date();
-  document.getElementById('dateInput').value = today.toISOString().split('T')[0];
-
-  function startCounter() {
-    const dateVal = document.getElementById('dateInput').value;
-    const timeVal = document.getElementById('timeInput').value || '00:00';
-
-    if (!dateVal) {
-      document.getElementById('dateInput').focus();
-      return;
-    }
-
-    targetDate = new Date(`${dateVal}T${timeVal}:00`);
-
-    if (isNaN(targetDate.getTime())) return;
-
-    if (targetDate > new Date()) {
-      alert('La date doit être dans le passé.');
-      return;
-    }
-
-    // Affiche la date de référence
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    document.getElementById('sinceDate').textContent = targetDate.toLocaleDateString('fr-FR', options);
-
-    // Switch UI
-    document.getElementById('placeholder').classList.add('hidden');
-    document.getElementById('counterSection').classList.remove('hidden');
-    document.getElementById('statusDot').classList.remove('inactive');
-
-    // Clear previous interval
-    if (intervalId) clearInterval(intervalId);
-    prevValues = {};
-
-    tick();
-    intervalId = setInterval(tick, 1000);
-  }
+  document.getElementById('sinceDate').textContent = 'mercredi 11 juin 2026 à 06:14';
+  document.getElementById('statusDot').classList.remove('inactive');
 
   function tick() {
     const now = new Date();
@@ -548,15 +487,8 @@
     document.getElementById('val-total').textContent = totalSeconds.toLocaleString('fr-FR');
   }
 
-  function resetCounter() {
-    if (intervalId) clearInterval(intervalId);
-    intervalId = null;
-    targetDate = null;
-    prevValues = {};
-    document.getElementById('counterSection').classList.add('hidden');
-    document.getElementById('placeholder').classList.remove('hidden');
-    document.getElementById('statusDot').classList.add('inactive');
-  }
+  tick();
+  setInterval(tick, 1000);
 </script>
 </body>
 </html>
